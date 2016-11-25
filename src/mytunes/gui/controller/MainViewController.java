@@ -56,6 +56,7 @@ public class MainViewController implements Initializable {
     private BasicPlayer player=new BasicPlayer();
     private MusicManager manager;
     private Music currient;
+    private Thread nextSong;
 
     /**
      * Initializes the controller class.
@@ -63,8 +64,32 @@ public class MainViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         manager=MusicManager.getManager();
-        tbAll.setItems(FXCollections.observableArrayList(manager.getMusic(new File("D:/muzika"))));
+        tbAll.setItems(FXCollections.observableArrayList(manager.getMusic(new File("D:/muzika"))));//define music folder
         clTitle.setCellValueFactory(new PropertyValueFactory("name"));
+        nextSong=new Thread(){
+            @Override
+            public void run(){
+                int i=0;
+                while(true){
+                    try {
+                        Thread.sleep(1000);
+                        if(player.getStatus()==2){
+                        tbAll.getSelectionModel().select(currient);
+                        tbAll.getSelectionModel().selectNext();
+                        player.open(tbAll.getSelectionModel().getSelectedItem().getFile());
+                        player.play();
+                        }
+                    } 
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
+                    catch (BasicPlayerException ex) {
+                        Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    }
+                }
+        };
+        nextSong.start();
     }    
 
     @FXML
@@ -93,7 +118,7 @@ public class MainViewController implements Initializable {
                 player.play();
                 currient=tbAll.getSelectionModel().getSelectedItem();
                 btnPlay.setText("Pause");
-            } 
+            }
             catch (BasicPlayerException ex) {
                 Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -116,6 +141,7 @@ public class MainViewController implements Initializable {
 
     @FXML
     private void handleClose(ActionEvent event) {
+        nextSong.stop();
         try {
             player.stop();
         } 
