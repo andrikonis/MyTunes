@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" pickOnBounds="false" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mytunes.gui.controller.MainViewController">
+   <children>
+      <HBox layoutX="66.0" layoutY="14.0" prefHeight="100.0" prefWidth="200.0" spacing="6.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="100.0">
+         <children>
+            <TableView prefWidth="250.0">
+              <columns>
+                <TableColumn prefWidth="100.0" text="Name" />
+                <TableColumn prefWidth="75.0" text="Songs" />
+                  <TableColumn prefWidth="75.0" text="Time" />
+              </columns>
+            </TableView>
+            <ListView prefWidth="140.0" />
+            <Button mnemonicParsing="false" prefHeight="30.0" text="&lt;--" />
+            <TableView fx:id="tbAll" maxWidth="5000.0" prefWidth="350.0">
+              <columns>
+                <TableColumn fx:id="clTitle" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="110.0" text="Title" />
+                <TableColumn fx:id="clArtist" prefWidth="100.0" text="Artist" />
+                  <TableColumn fx:id="clCat" prefWidth="70.0" text="Category" />
+                  <TableColumn fx:id="clTime" prefWidth="70.0" text="Time" />
+              </columns>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </TableView>
+         </children>
+      </HBox>
+      <HBox layoutX="319.0" layoutY="21.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="550.0">
+         <children>
+            <HBox prefWidth="250.0" spacing="12.0">
+               <children>
+                  <Button mnemonicParsing="false" prefWidth="75.0" text="New..." />
+                  <Button mnemonicParsing="false" prefWidth="75.0" text="Edit" />
+                  <Button mnemonicParsing="false" prefWidth="75.0" text="Delete" />
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" prefWidth="75.0" text="Delete">
+               <HBox.margin>
+                  <Insets left="69.0" />
+               </HBox.margin>
+            </Button>
+            <HBox prefWidth="340.0" spacing="17.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button mnemonicParsing="false" prefWidth="75.0" text="Add..." />
+                  <Button mnemonicParsing="false" prefWidth="75.0" text="Edit" />
+                  <Button mnemonicParsing="false" prefWidth="75.0" text="Delete" />
+                  <Button mnemonicParsing="false" onAction="#handleClose" prefWidth="75.0" text="Close">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <HBox.margin>
+                  <Insets left="46.0" />
+               </HBox.margin>
+            </HBox>
+         </children>
+      </HBox>
+      <Slider fx:id="sldVolume" blockIncrement="1.0" layoutX="31.0" layoutY="66.0" value="100.0" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="75.0" />
+      <ToggleButton fx:id="tglPlay" layoutX="95.0" layoutY="25.0" mnemonicParsing="false" onAction="#handlePlaying" prefHeight="50.0" prefWidth="50.0" text="Play" />
+      <Button fx:id="btnFoward" layoutX="145.0" layoutY="38.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" />
+      <Button fx:id="btnBack" layoutX="70.0" layoutY="38.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;" />
+      <TextField layoutX="554.0" layoutY="26.0" />
+      <Button layoutX="703.0" layoutY="26.0" mnemonicParsing="false" prefWidth="50.0" text="Filter" />
+      <Label fx:id="lblNow" layoutX="300.0" layoutY="43.0" maxWidth="-Infinity" prefWidth="100.0" />
+      <Label layoutX="400.0" layoutY="43.0" text="Now playing" />
+      <Label layoutX="525.0" layoutY="30.0" text="Filter:" />
+   </children>
+</AnchorPane>
