@@ -45,8 +45,8 @@ public class Music {
     public void setTime(String time) {
         this.time = time;
     }
-
-    public String getPath() {
+    @Override
+    public String toString() {
         return file.getAbsolutePath();
     }
 

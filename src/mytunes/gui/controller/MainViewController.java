@@ -15,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleButton;
 import mytunes.be.Music;
 import java.net.URL;
 import java.util.logging.Level;
@@ -46,7 +45,7 @@ public class MainViewController implements Initializable {
     @FXML
     private Slider sldVolume;
     @FXML
-    private ToggleButton tglPlay;
+    private Button btnPlay;
     @FXML
     private Button btnFoward;
     @FXML
@@ -56,6 +55,7 @@ public class MainViewController implements Initializable {
     
     private BasicPlayer player=new BasicPlayer();
     private MusicManager manager;
+    private Music currient;
 
     /**
      * Initializes the controller class.
@@ -69,12 +69,48 @@ public class MainViewController implements Initializable {
 
     @FXML
     private void handlePlaying(ActionEvent event) {
-        try {
-            player.open(tbAll.getSelectionModel().getSelectedItem().getFile());
-            player.play();
-        } 
-        catch (BasicPlayerException ex) {
-            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+        if(check()&&player.getStatus()==0){
+            try {
+                player.pause();
+                btnPlay.setText("Play");
+            }
+            catch (BasicPlayerException ex) {
+                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else if(check()&&player.getStatus()==1){
+            try {
+                player.resume();
+                btnPlay.setText("Pause");
+            }
+            catch (BasicPlayerException ex) {
+                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else{
+            try {
+                player.open(tbAll.getSelectionModel().getSelectedItem().getFile());
+                player.play();
+                currient=tbAll.getSelectionModel().getSelectedItem();
+                btnPlay.setText("Pause");
+            } 
+            catch (BasicPlayerException ex) {
+                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    private boolean check(){
+        if(tbAll.getSelectionModel().getSelectedItem()==currient)return true;
+        else return false; 
+    }
+    
+    @FXML
+    private void buttonSet(){
+        if(check()){
+            btnPlay.setText("Pause");
+        }
+        else{
+            btnPlay.setText("Play");
         }
     }
 
