@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mytunes.bll;
+package dk.easv.mytunes.bll;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import mytunes.be.Music;
+import dk.easv.mytunes.be.Music;
 import mytunes.dal.MusicReader;
 
 /**

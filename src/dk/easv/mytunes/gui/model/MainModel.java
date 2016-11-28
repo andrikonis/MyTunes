@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mytunes.gui.model;
+package dk.easv.mytunes.gui.model;
 
 import java.io.File;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import mytunes.be.Music;
-import mytunes.bll.MusicManager;
+import dk.easv.mytunes.be.Music;
+import dk.easv.mytunes.bll.MusicManager;
 
 /**
  *

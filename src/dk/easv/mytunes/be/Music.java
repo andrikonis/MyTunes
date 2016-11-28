@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mytunes.be;
+package dk.easv.mytunes.be;
 
 import java.io.File;
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mytunes.gui.controller;
+package dk.easv.mytunes.gui.controller;
 
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -14,7 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import mytunes.be.Music;
+import dk.easv.mytunes.be.Music;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
