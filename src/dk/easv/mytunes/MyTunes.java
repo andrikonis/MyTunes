@@ -24,12 +24,18 @@ public class MyTunes extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            Parent root=FXMLLoader.load(getClass().getResource("gui/view/MainView.fxml"));
+            Parent root=FXMLLoader.load(getClass().getResource("/dk/easv/mytunes/gui/view/MainWindow.fxml"));
+            
             Scene scene=new Scene(root);
+            
             stage.setScene(scene);
+            
             stage.setTitle("MyTunes");
+            
             stage.show();
-        } catch (IOException ex) {
+        } 
+        
+        catch (IOException ex) {
             Logger.getLogger(MyTunes.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

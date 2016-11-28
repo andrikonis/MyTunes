@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import mytunes.gui.model.MainModel;
+import dk.easv.mytunes.gui.model.MainModel;
 
 /**
  * FXML Controller class

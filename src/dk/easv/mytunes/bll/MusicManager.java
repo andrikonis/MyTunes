@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import dk.easv.mytunes.be.Music;
-import mytunes.dal.MusicReader;
+import dk.easv.mytunes.dal.MusicReader;
 
 /**
  *
