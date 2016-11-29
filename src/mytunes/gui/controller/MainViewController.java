@@ -5,6 +5,7 @@
  */
 package mytunes.gui.controller;
 
+import java.io.File;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,13 +17,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import mytunes.be.Music;
 import java.net.URL;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import mytunes.gui.model.MainModel;
+import mytunes.bll.MusicManager;
 
 /**
  * FXML Controller class
@@ -34,13 +35,13 @@ public class MainViewController implements Initializable {
     @FXML
     private TableView<Music> tbAll;
     @FXML
-    private TableColumn<Music, String> clTitle;
+    private TableColumn<Music,String> clTitle;
     @FXML
-    private TableColumn<Music, String> clArtist;
+    private TableColumn<Music,String> clArtist;
     @FXML
-    private TableColumn<Music, String> clCat;
+    private TableColumn<Music,String> clCat;
     @FXML
-    private TableColumn<Music, String> clTime;
+    private TableColumn<Music,String> clTime;
     @FXML
     private Slider sldVolume;
     @FXML
@@ -51,91 +52,103 @@ public class MainViewController implements Initializable {
     private Button btnBack;
     @FXML
     private Label lblNow;
-
-    private BasicPlayer player = new BasicPlayer();
-    private MainModel model;
+    
+    private BasicPlayer player=new BasicPlayer();
+    private MusicManager manager;
     private Music currient;
-
-    private Thread nextSong = new Thread() {
-        @Override
-        public void run() {
-            for (int i = tbAll.getSelectionModel().getSelectedIndex(); i < tbAll.getItems().size(); i++) {
-                try {
-                    currient = tbAll.getItems().get(i);
-                    player.open(currient.getFile());
-                    player.play();
-                    while (player.getStatus() != 2) {
-                    }
-                    btnPlay.setText("Play");
-                } catch (BasicPlayerException ex) {
-                    Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    };
+    private Thread nextSong;
 
     /**
      * Initializes the controller class.
      */
     @Override
-        public void initialize(URL url, ResourceBundle rb) {
-            model = new MainModel();
-            model.getMusic("D:/muzika");//define music folder
-            tbAll.itemsProperty().bind(model.getListProperty());
-            clTitle.setCellValueFactory(new PropertyValueFactory("name"));
-            clArtist.setCellValueFactory(new PropertyValueFactory("artist"));
-            clCat.setCellValueFactory(new PropertyValueFactory("category"));
-            clTime.setCellValueFactory(new PropertyValueFactory("time"));
-        }
-
-        @FXML
-        private void handlePlaying(ActionEvent event) {
-            if (check() && player.getStatus() == 0) {
-                try {
-                    player.pause();
-                    btnPlay.setText("Play");
-                } catch (BasicPlayerException ex) {
-                    Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+    public void initialize(URL url, ResourceBundle rb) {
+        manager=MusicManager.getManager();
+        tbAll.setItems(FXCollections.observableArrayList(manager.getMusic(new File("D:/muzika"))));//define music folder
+        clTitle.setCellValueFactory(new PropertyValueFactory("name"));
+        nextSong=new Thread(){
+            @Override
+            public void run(){
+                int i=0;
+                while(true){
+                    try {
+                        Thread.sleep(1000);
+                        if(player.getStatus()==2){
+                        tbAll.getSelectionModel().select(currient);
+                        tbAll.getSelectionModel().selectNext();
+                        player.open(tbAll.getSelectionModel().getSelectedItem().getFile());
+                        player.play();
+                        }
+                    } 
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
+                    catch (BasicPlayerException ex) {
+                        Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    }
                 }
-            } else if (check() && player.getStatus() == 1) {
-                try {
-                    player.resume();
-                    btnPlay.setText("Pause");
-                } catch (BasicPlayerException ex) {
-                    Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else {
-                nextSong.start();
-                btnPlay.setText("Pause");
-            }
-        }
+        };
+        nextSong.start();
+    }    
 
-        private boolean check() {
-            if (tbAll.getSelectionModel().getSelectedItem() == currient) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        @FXML
-        private void buttonSet() {
-            if (check()) {
-                btnPlay.setText("Pause");
-            } else {
+    @FXML
+    private void handlePlaying(ActionEvent event) {
+        if(check()&&player.getStatus()==0){
+            try {
+                player.pause();
                 btnPlay.setText("Play");
             }
-        }
-
-        @FXML
-        private void handleClose(ActionEvent event) {
-            nextSong.stop();
-            try {
-                player.stop();
-            } catch (BasicPlayerException ex) {
+            catch (BasicPlayerException ex) {
                 Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.exit(0);
         }
-
+        else if(check()&&player.getStatus()==1){
+            try {
+                player.resume();
+                btnPlay.setText("Pause");
+            }
+            catch (BasicPlayerException ex) {
+                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else{
+            try {
+                player.open(tbAll.getSelectionModel().getSelectedItem().getFile());
+                player.play();
+                currient=tbAll.getSelectionModel().getSelectedItem();
+                btnPlay.setText("Pause");
+            }
+            catch (BasicPlayerException ex) {
+                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
+    private boolean check(){
+        if(tbAll.getSelectionModel().getSelectedItem()==currient)return true;
+        else return false; 
+    }
+    
+    @FXML
+    private void buttonSet(){
+        if(check()){
+            btnPlay.setText("Pause");
+        }
+        else{
+            btnPlay.setText("Play");
+        }
+    }
+
+    @FXML
+    private void handleClose(ActionEvent event) {
+        nextSong.stop();
+        try {
+            player.stop();
+        } 
+        catch (BasicPlayerException ex) {
+            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.exit(0);
+    }
+    
+}
