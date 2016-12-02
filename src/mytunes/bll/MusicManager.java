@@ -6,10 +6,16 @@
 package mytunes.bll;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import mytunes.be.Music;
 import mytunes.dal.MusicReader;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
 
 /**
  *
@@ -22,7 +28,7 @@ public class MusicManager {
         if(manager==null)manager=new MusicManager();
         return manager;
     }
-    public List<Music> getMusic(File entry){
+    public List<Music> getMusic(File entry) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
         List<Music> list=new ArrayList();
         for (File file : MusicReader.getMusic(entry)){
             list.add(new Music(file));
