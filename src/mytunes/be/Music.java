@@ -7,8 +7,10 @@ package mytunes.be;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import mytunes.gui.model.MainModel;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
@@ -23,28 +25,17 @@ import org.jaudiotagger.tag.TagException;
  *
  * @author Andrius
  */
-public class Music {
+public class Music implements Serializable{
     private File file;
     private String name,artist,category,time;
-    private static final List<String> catList=new ArrayList();
     public Music(File file) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
-        initCat();
         this.file=file;
         name=getFileTitle();
         artist=getFileArtist();
         category=getFileCategory();
         time=getFileLength();
     }
-    private void initCat(){
-        catList.add("unknown");
-        catList.add("pop");
-        catList.add("rap");
-        catList.add("house");
-        catList.add("electro");
-        catList.add("classic");
-        catList.add("rock");
-        catList.add("hip hop");
-    }
+    
     private String getFileLength() throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
         String s="";
         AudioFile audio=AudioFileIO.read(file);
@@ -81,10 +72,10 @@ public class Music {
         return s;
     }
     private String getFileCategory() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
-        String s=catList.get(0);
+        String s=MainModel.getModel().catList.get(0);
         AudioFile audio=AudioFileIO.read(file);
         Tag tag=audio.getTag();
-        for (String string : catList) {
+        for (String string : MainModel.getModel().catList) {
             try{
                 String mystr=string;
                 if(string.contains(" "))mystr=string.split(" ")[0];
@@ -108,7 +99,7 @@ public class Music {
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.category = new String(category);
     }
 
     public String getTime() {
@@ -125,6 +116,9 @@ public class Music {
 
     public String getName() {
         return name;
+    }
+    public void setName(String name){
+        this.name=name;
     }
 
     public File getFile() {

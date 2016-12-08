@@ -6,17 +6,19 @@
 package mytunes.dal;
 
 import java.io.File;
-import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Andrius
  */
 public class MusicReader {
-    public static File[] getMusic(File entry){
-        return entry.listFiles(new FilenameFilter() { 
-                 public boolean accept(File dir, String filename)
-                      { return filename.endsWith(".mp3"); }
-        });
+    public static List<File> getMusic(List<File> list){
+        List<File> fileList=new ArrayList();
+        for (File file : list) {
+            if(file.getName().endsWith(".mp3"))fileList.add(file);
+        }
+        return fileList;
     }
 }

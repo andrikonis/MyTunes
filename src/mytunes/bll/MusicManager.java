@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import mytunes.be.Music;
 import mytunes.dal.MusicReader;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -28,11 +27,25 @@ public class MusicManager {
         if(manager==null)manager=new MusicManager();
         return manager;
     }
-    public List<Music> getMusic(File entry) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
-        List<Music> list=new ArrayList();
-        for (File file : MusicReader.getMusic(entry)){
-            list.add(new Music(file));
+    public List<Music> getMusic(List<File> list,List<Music> currient) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
+        return createMusicList(filerExisting(MusicReader.getMusic(list), currient));
+    }
+    private List<Music> createMusicList(List<File> list)throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
+        List<Music> musicList=new ArrayList();
+        for (File file : list) {
+            musicList.add(new Music(file));
         }
-        return list;
+        return musicList;
+    }
+    private List<File> filerExisting(List<File> list,List<Music> currient){
+        List<File> fileList=new ArrayList();
+            for (File file : list) {
+                boolean add=true;
+                for (Music music : currient) {
+                    if(music.getFile().getName().equals(file.getName()))add=false;
+                }
+                if(add)fileList.add(file);
+            }
+        return fileList;
     }
 }

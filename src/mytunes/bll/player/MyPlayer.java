@@ -10,15 +10,21 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.Port;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import mytunes.be.Music;
+import mytunes.gui.model.MainModel;
 
 /**
  *
  * @author Andrius
  */
-public class MyPlayer implements PlayerController, Runnable{
+public class MyPlayer implements Runnable{
     /**
      * These variables are used to distinguish stopped, paused, playing states.
      * We need them to control Thread.
@@ -33,11 +39,11 @@ public class MyPlayer implements PlayerController, Runnable{
 
     private Player player;
     private Thread thread;
-    private Music currient;
+    private int currientIndex;
     private List<Music> playlist;
     
     private void reset(){
-        currient=null;
+        currientIndex=0;
         playlist=null;
         player=null;
         thread=null;
@@ -49,48 +55,46 @@ public class MyPlayer implements PlayerController, Runnable{
         return playlist;
     }
 
-    @Override
-    public void openPlaylist(List<Music> list,Music song)throws FileNotFoundException,JavaLayerException{
+    public void openPlaylist(List<Music> list,int index){
         playlist=list;
-        currient=song;
+        currientIndex=index;
         status=OPENED;
     }
 
-    @Override
     public int getStatus() {
         return status;
     }
 
-    @Override
     public Music getCurrient() {
-        return currient;
+        if(playlist==null)return null;
+        else return playlist.get(currientIndex);
     }
 
-    @Override
     public void seek(long bytes) {
     }
 
-    @Override
     public void play() {
         if(thread!=null)thread.stop();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MyPlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
         thread=new Thread(this);
         thread.setDaemon(true);
         thread.start();
     }
 
-    @Override
     public void stop() {
         if(thread!=null)thread.stop();
         reset();
     }
 
-    @Override
     public void pause() {
         thread.suspend();
         status=PAUSED;
     }
 
-    @Override
     public void resume() {
         thread.resume();
         status=PLAYING;
@@ -99,9 +103,20 @@ public class MyPlayer implements PlayerController, Runnable{
     @Override
     public void run() {
         try{
-            for(int i=playlist.indexOf(currient);i<playlist.size();i++){
+            for(int i=currientIndex;i<playlist.size();i++){
                 player=new Player(new FileInputStream(playlist.get(i).getFile()));
                 status=PLAYING;
+                currientIndex=i;
+                synchronized(MainModel.getModel().getCurrientProperty()){
+                    String currient=playlist.get(i).getName()+" "+playlist.get(i).getArtist();
+                    Platform.runLater(new Runnable(){
+                        @Override
+                        public void run(){
+                            MainModel.getModel().getCurrientProperty().setValue(currient);
+                            MainModel.getModel().setButton();
+                        }
+                    });
+                }
                 player.play();
                 status=STOPPED;
             }
@@ -110,5 +125,33 @@ public class MyPlayer implements PlayerController, Runnable{
             Logger.getLogger(MyPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+    public void setVolume(float vol){
+        try {
+            Mixer.Info[] infos = AudioSystem.getMixerInfo();
+            for (Mixer.Info info : infos) {
+                Mixer mixer = AudioSystem.getMixer(info);
+                if (mixer.isLineSupported(Port.Info.SPEAKER)) {
+                    Port port = (Port) mixer.getLine(Port.Info.SPEAKER);
+                    port.open();
+                    if (port.isControlSupported(FloatControl.Type.VOLUME)) {
+                        FloatControl volume = (FloatControl) port.getControl(FloatControl.Type.VOLUME);
+                        volume.setValue(vol / 100);
+                    }
+                    port.close();
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(MainModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public int getCurrientIndex() {
+        return currientIndex;
+    }
+    public void handleNextPrevious(int i){
+        if(i>=0&&i<playlist.size()){
+            currientIndex=i;
+            play();
+        }
+    }
 }
