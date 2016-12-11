@@ -8,8 +8,6 @@ package mytunes.be;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import mytunes.gui.model.MainModel;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -34,6 +32,13 @@ public class Music implements Serializable{
         artist=getFileArtist();
         category=getFileCategory();
         time=getFileLength();
+    }
+    public Music(Music music){
+        file=new File(music.getFile().getAbsolutePath());
+        name=new String(music.getName());
+        artist=new String(music.getArtist());
+        category=new String(music.getCategory());
+        time=new String(music.getTime());
     }
     
     private String getFileLength() throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
@@ -111,7 +116,7 @@ public class Music implements Serializable{
     }
     @Override
     public String toString() {
-        return file.getAbsolutePath();
+        return name+" - "+artist;
     }
 
     public String getName() {

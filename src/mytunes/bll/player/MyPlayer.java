@@ -102,27 +102,29 @@ public class MyPlayer implements Runnable{
     
     @Override
     public void run() {
-        try{
-            for(int i=currientIndex;i<playlist.size();i++){
-                player=new Player(new FileInputStream(playlist.get(i).getFile()));
-                status=PLAYING;
-                currientIndex=i;
-                synchronized(MainModel.getModel().getCurrientProperty()){
-                    String currient=playlist.get(i).getName()+" "+playlist.get(i).getArtist();
-                    Platform.runLater(new Runnable(){
-                        @Override
-                        public void run(){
-                            MainModel.getModel().getCurrientProperty().setValue(currient);
-                            MainModel.getModel().setButton();
-                        }
-                    });
+        synchronized(playlist){
+            try{
+                for(int i=currientIndex;i<playlist.size();i++){
+                    player=new Player(new FileInputStream(playlist.get(i).getFile()));
+                    status=PLAYING;
+                    currientIndex=i;
+                    synchronized(MainModel.getModel().getCurrientProperty()){
+                        String currient=playlist.get(i).toString();
+                        Platform.runLater(new Runnable(){
+                            @Override
+                            public void run(){
+                                MainModel.getModel().getCurrientProperty().setValue(currient);
+                                MainModel.getModel().setButton();
+                            }
+                        });
+                    }
+                    player.play();
+                    status=STOPPED;
                 }
-                player.play();
-                status=STOPPED;
+            } 
+            catch (JavaLayerException | FileNotFoundException ex) {
+                Logger.getLogger(MyPlayer.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } 
-        catch (JavaLayerException | FileNotFoundException ex) {
-            Logger.getLogger(MyPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     public void setVolume(float vol){

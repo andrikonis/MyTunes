@@ -48,4 +48,15 @@ public class MusicManager {
             }
         return fileList;
     }
+    public List<Music> filer(List<Music> addList,List<Music> currientList){
+        List<Music> list=new ArrayList();
+        for (Music amusic : addList) {
+           boolean add=true;
+            for (Music cmusic : currientList) {
+                if(cmusic.getFile().getName().equals(amusic.getFile().getName()))add=false;
+            }
+            if(add)list.add(amusic);
+        }
+        return list;
+    }
 }

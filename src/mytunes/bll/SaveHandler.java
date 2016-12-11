@@ -17,10 +17,10 @@ import mytunes.dal.SaveManager;
  * @author Andrius
  */
 public class SaveHandler {
-    public static void saveList(List<Music> list,String saveName) throws IOException{
+    public static void saveList(List list,String saveName) throws IOException{
         SaveManager.saveList(new ArrayList(list), new File("save/"+saveName));
     }
-    public static List<Music> getSaved(String saveName) throws IOException, ClassNotFoundException{
+    public static List getSaved(String saveName) throws IOException, ClassNotFoundException{
         return SaveManager.getSaved(new File("save/"+saveName));
     }
 }

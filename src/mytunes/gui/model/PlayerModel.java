@@ -33,6 +33,10 @@ public class PlayerModel {
             player.play();
         }
     }
+    public void play(List<Music> list){
+        player.openPlaylist(list, 0);
+        player.play();
+    }
     /**
      * checks if selected song is curriently playing
      *

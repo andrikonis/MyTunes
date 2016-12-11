@@ -21,13 +21,13 @@ import mytunes.be.Music;
  */
 public class SaveManager {
     
-    public static List<Music> getSaved(File save)throws IOException,ClassNotFoundException{
+    public static List getSaved(File save)throws IOException,ClassNotFoundException{
         ObjectInputStream in=new ObjectInputStream(new FileInputStream(save));
-        List<Music> list=new ArrayList((List<Music>)in.readObject());
+        List list=new ArrayList((List<Music>)in.readObject());
         in.close();
         return list;
     }
-    public static void saveList(List<Music> list,File save)throws IOException{
+    public static void saveList(List list,File save)throws IOException{
         ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream(save));
         out.writeObject(list);
         out.close();

@@ -58,10 +58,10 @@ public class EditController implements Initializable {
         alert.setTitle("Confirmation");
         alert.setContentText("Are you sure want to save changes?");
         if(alert.showAndWait().get()==ButtonType.CANCEL)return;
-        music.setName(txtTitle.getText());
-        music.setArtist(txtArtist.getText());
+        music.setName(txtTitle.getText().trim());
+        music.setArtist(txtArtist.getText().trim());
         music.setCategory(comCat.getSelectionModel().getSelectedItem());
-        music.setTime(txtTime.getText());
+        music.setTime(txtTime.getText().trim());
         ((Stage)((Node)event.getTarget()).getScene().getWindow()).close();
     }
 
