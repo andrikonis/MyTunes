@@ -17,18 +17,33 @@ public class Playlist implements Serializable {
     
     private String name;
     private List<Music> playlist;
+    /**
+     * creates new Playlist entity with given name string
+     * @param name 
+     */
     public Playlist(String name){
         playlist = new ArrayList();
         this.name=name;
     }
-
+    /**
+     * returns name of the playlist
+     * @return String
+     */
     public String getName() {
         return name;
     }
-
+    /**
+     * returns time as h:mm:ss
+     * @return String 
+     */
     public String getTime() {
         return getPlaylistTime();
     }
+    /**
+     * tries to put all times to integers
+     * and calculate total time of the playlist
+     * @return String
+     */
     private String getPlaylistTime() {
         int h=0;
         int min=0;
@@ -57,22 +72,40 @@ public class Playlist implements Serializable {
         else time += sec;
         return time;      
     }
-    
+    /**
+     * gets the playlist
+     * @return List<Music>
+     */
     public List<Music> getPlaylist() {
         return playlist;
     }
+    /**
+     * adds list of given music elements to the playlist
+     * @param list 
+     */
     public void addMusic(List<Music> list){
         for (Music music : list) {
             playlist.add(new Music(music));
         }    
     }
+    /**
+     * gets the number of songs in the playlist
+     * @return 
+     */
     public int getPlaylistSize(){
         return playlist.size();
     }
-
+    /**
+     * sets the name of playlist to given string value
+     * @param name 
+     */
     public void setName(String name) {
         this.name = name;
     }
+    /**
+     * moves music entity of given index up in the queue
+     * @param index 
+     */
     public void moveUp(int index){
         if(index>0){
             Music temp=playlist.get(index-1);
@@ -80,6 +113,10 @@ public class Playlist implements Serializable {
             playlist.set(index, temp);
         }
     }
+    /**
+     * moves music entity of given index down in the queue
+     * @param index 
+     */
     public void moveDown(int index){
         if(index<playlist.size()-1){
             Music temp=playlist.get(index+1);
@@ -87,6 +124,5 @@ public class Playlist implements Serializable {
             playlist.set(index, temp);
         }
     }
-    
 }
     

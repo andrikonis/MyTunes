@@ -43,7 +43,11 @@ public class EditController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    }  
+    } 
+    /**
+     * loads music entity for editing
+     * @param music 
+     */
     public void setMusic(Music music){
         this.music=music;
         txtTitle.setText(music.getName());
@@ -52,6 +56,10 @@ public class EditController implements Initializable {
         comCat.getSelectionModel().select(music.getCategory());
         txtTime.setText(music.getTime());
     }
+    /**
+     * saves the changes and closes the window
+     * @param event 
+     */
     @FXML
     private void handleSave(ActionEvent event) {
         Alert alert=new Alert(AlertType.CONFIRMATION);
@@ -64,7 +72,10 @@ public class EditController implements Initializable {
         music.setTime(txtTime.getText().trim());
         ((Stage)((Node)event.getTarget()).getScene().getWindow()).close();
     }
-
+    /**
+     * only closes the window
+     * @param event 
+     */
     @FXML
     private void handleCancel(ActionEvent event) {
         ((Stage)((Node)event.getTarget()).getScene().getWindow()).close();

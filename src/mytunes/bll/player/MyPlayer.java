@@ -41,38 +41,54 @@ public class MyPlayer implements Runnable{
     private Thread thread;
     private int currientIndex;
     private List<Music> playlist;
-    
+    /**
+     * resets the player to its initial state
+     */
     private void reset(){
         currientIndex=0;
         playlist=null;
         player=null;
         thread=null;
         status=UNKNOWN;
-        
     }
-    
+    /**
+     * gets curriently opened list of music
+     * @return List<Music>
+     */
     public List<Music> getPlaylist(){
         return playlist;
     }
-
+    /**
+     * sets given list of songs as playlist
+     * and chooses given index as starting point for the play queue
+     * of the playlist
+     * @param list
+     * @param index 
+     */
     public void openPlaylist(List<Music> list,int index){
         playlist=list;
         currientIndex=index;
         status=OPENED;
     }
-
+    /**
+     * gets the status of playlist
+     * @return int
+     */
     public int getStatus() {
         return status;
     }
-
+    /**
+     * return curriently playing (paused) song or null
+     * if nothing is playing
+     * @return Music
+     */
     public Music getCurrient() {
         if(playlist==null)return null;
         else return playlist.get(currientIndex);
     }
-
-    public void seek(long bytes) {
-    }
-
+    /**
+     * starts the playback of song
+     */
     public void play() {
         if(thread!=null)thread.stop();
         try {
@@ -84,22 +100,31 @@ public class MyPlayer implements Runnable{
         thread.setDaemon(true);
         thread.start();
     }
-
+    /**
+     * stops (resets) player
+     */
     public void stop() {
         if(thread!=null)thread.stop();
         reset();
     }
-
+    /**
+     * pauses playing song
+     */
     public void pause() {
         thread.suspend();
         status=PAUSED;
     }
-
+    /**
+     * resumes to paused song
+     */
     public void resume() {
         thread.resume();
         status=PLAYING;
     }
-    
+    /**
+     * main loop responsible for playing and switching
+     * between songs
+     */
     @Override
     public void run() {
         synchronized(playlist){
@@ -127,6 +152,10 @@ public class MyPlayer implements Runnable{
             }
         }
     }
+    /**
+     * sets volume
+     * @param vol 
+     */
     public void setVolume(float vol){
         try {
             Mixer.Info[] infos = AudioSystem.getMixerInfo();
@@ -146,10 +175,17 @@ public class MyPlayer implements Runnable{
             Logger.getLogger(MainModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    /**
+     * gets index of curriently playing song
+     * @return int
+     */
     public int getCurrientIndex() {
         return currientIndex;
     }
+    /**
+     * starts playing song of given index
+     * @param i 
+     */
     public void handleNextPrevious(int i){
         if(i>=0&&i<playlist.size()){
             currientIndex=i;

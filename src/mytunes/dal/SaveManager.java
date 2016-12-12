@@ -20,13 +20,25 @@ import mytunes.be.Music;
  * @author Andrius
  */
 public class SaveManager {
-    
+    /**
+     * deserislises list of defined save file
+     * @param save
+     * @return List
+     * @throws IOException
+     * @throws ClassNotFoundException 
+     */
     public static List getSaved(File save)throws IOException,ClassNotFoundException{
         ObjectInputStream in=new ObjectInputStream(new FileInputStream(save));
         List list=new ArrayList((List<Music>)in.readObject());
         in.close();
         return list;
     }
+    /**
+     * serialises given list to given file
+     * @param list
+     * @param save
+     * @throws IOException 
+     */
     public static void saveList(List list,File save)throws IOException{
         ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream(save));
         out.writeObject(list);

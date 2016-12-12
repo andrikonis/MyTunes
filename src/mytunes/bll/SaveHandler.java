@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import mytunes.be.Music;
 import mytunes.dal.SaveManager;
 
 /**
@@ -17,9 +16,25 @@ import mytunes.dal.SaveManager;
  * @author Andrius
  */
 public class SaveHandler {
+    /**
+     * creates new array list from given list
+     * creates save path from given string
+     * sends those to SaveManager
+     * @param list
+     * @param saveName
+     * @throws IOException 
+     */
     public static void saveList(List list,String saveName) throws IOException{
         SaveManager.saveList(new ArrayList(list), new File("save/"+saveName));
     }
+    /**
+     * asks SaveManager to read save file with given name
+     * and returns list of saved objects which needs to be typecasted to List<Music> of List<Playlist>
+     * @param saveName
+     * @return List
+     * @throws IOException
+     * @throws ClassNotFoundException 
+     */
     public static List getSaved(String saveName) throws IOException, ClassNotFoundException{
         return SaveManager.getSaved(new File("save/"+saveName));
     }

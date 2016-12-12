@@ -38,6 +38,9 @@ public class MainModel {
     private static MainModel model;
     public static List<String> catList;
     private boolean filtered;
+    /**
+     * creates new model and initialoizes all of its variables
+     */
     private MainModel() {
         currientList=new ArrayList();
         catList=new ArrayList();
@@ -51,6 +54,9 @@ public class MainModel {
         playlists.set(FXCollections.observableArrayList());
         filtered=false;
     }
+    /**
+     * initialises category list
+     */
     private void initCat(){
         catList.add("unknown");
         catList.add("pop");
@@ -61,17 +67,34 @@ public class MainModel {
         catList.add("rock");
         catList.add("hip hop");
     }
-    
+    /**
+     * gets the model, singleton pattern
+     * @return MainModel
+     */
     public static MainModel getModel(){
         if(model==null)model=new MainModel();
         return model;
     }
+    /**
+     * returns property of curriently playing song name
+     * @return SimpleStringProperty
+     */
     public SimpleStringProperty getCurrientProperty(){
         return currientProperty;
     }
+    /**
+     * returns property for all song list
+     * @return SimpleListProperty<Music>
+     */
     public SimpleListProperty<Music> getAllListProperty() {
         return allListProperty;
     }
+    /**
+     * adds given files to all song list
+     * @param list
+     * @param currient
+     * @throws Exception 
+     */
     public void getMusic(List<File> list,List<Music> currient)throws Exception{
         if(list==null)return;
         try {
@@ -81,6 +104,9 @@ public class MainModel {
             Logger.getLogger(MainModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * loads all saved states
+     */
     public void getSavedState(){
         try {
             currientList.addAll((List<Music>)SaveHandler.getSaved("state.ser"));
@@ -98,6 +124,10 @@ public class MainModel {
             Logger.getLogger(MainModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * saves the states of playlists and all songs list
+     * @throws Exception 
+     */
     public void saveState() throws Exception{
         try {
             SaveHandler.saveList(currientList,"state.ser");
@@ -106,9 +136,17 @@ public class MainModel {
             throw new Exception();
         }
     }
+    /**
+     * asks the controller to set the play button image
+     */
     public void setButton(){
         MainViewController.getController().buttonSet();
     }
+    /**
+     * creartes new playlist with given name
+     * @param name
+     * @throws Exception 
+     */
     public void addPlaylist(String name) throws Exception{
         boolean add=true;
         for (Playlist cplaylist : playlists) {
@@ -117,6 +155,12 @@ public class MainModel {
         if(add)playlists.add(new Playlist(name));
         else throw new Exception();
     }
+    /**
+     * changes given playlist's name
+     * @param playlist
+     * @param name
+     * @throws Exception 
+     */
     public void editPlaylist(Playlist playlist,String name) throws Exception{
         boolean add=true;
         for (Playlist cplaylist : playlists) {
@@ -125,13 +169,25 @@ public class MainModel {
         if(add)playlist.setName(name);
         else throw new Exception();
     }
-
+    /**
+     * return property for playlists
+     * @return SimpleListProperty<Playlist>
+     */
     public SimpleListProperty<Playlist> getPlaylists() {
         return playlists;
     }
+    /**
+     * adds given music list to playlist
+     * @param list
+     * @param playlist 
+     */
     public void addToPlaylist(List<Music> list,Playlist playlist){
         playlist.addMusic(manager.filer(list, playlist.getPlaylist()));
     }
+    /**
+     * handles search and reset actions for search
+     * @param query 
+     */
     public void search(String query){
         if(!filtered){
             allListProperty.setAll(SearchManager.search(allListProperty.get(), query));
@@ -142,6 +198,12 @@ public class MainModel {
             filtered=false;
         }
     }
+    /**
+     * returns the state of search
+     * true - displayed items in all songs list are filtered
+     * false - displayed items in all songs list are not filtered
+     * @return boolean
+     */
     public boolean getFilterState(){
         return filtered;
     }

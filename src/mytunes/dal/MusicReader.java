@@ -14,6 +14,11 @@ import java.util.List;
  * @author Andrius
  */
 public class MusicReader {
+    /**
+     * filters out all non-mp3 format files
+     * @param list
+     * @return List<Files>
+     */
     public static List<File> getMusic(List<File> list){
         List<File> fileList=new ArrayList();
         for (File file : list) {

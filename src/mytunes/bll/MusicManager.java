@@ -23,13 +23,38 @@ import org.jaudiotagger.tag.TagException;
 public class MusicManager {
     private static MusicManager manager;
     private MusicManager(){}
+    /**
+     * gets MusicManager, singleton pattern
+     * @return MusicManager
+     */
     public static MusicManager getManager(){
         if(manager==null)manager=new MusicManager();
         return manager;
     }
+    /**
+     * returns list of music entities from list of given file entities
+     * @param list
+     * @param currient
+     * @return List<Music>
+     * @throws IOException
+     * @throws CannotReadException
+     * @throws TagException
+     * @throws ReadOnlyFileException
+     * @throws InvalidAudioFrameException 
+     */
     public List<Music> getMusic(List<File> list,List<Music> currient) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
         return createMusicList(filerExisting(MusicReader.getMusic(list), currient));
     }
+    /**
+     * creates list of music entities from list of file entities
+     * @param list
+     * @return List<Music>
+     * @throws IOException
+     * @throws CannotReadException
+     * @throws TagException
+     * @throws ReadOnlyFileException
+     * @throws InvalidAudioFrameException 
+     */
     private List<Music> createMusicList(List<File> list)throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
         List<Music> musicList=new ArrayList();
         for (File file : list) {
@@ -37,6 +62,13 @@ public class MusicManager {
         }
         return musicList;
     }
+    /**
+     * compares and filers out same named files
+     * filters list of files using list of music
+     * @param list
+     * @param currient
+     * @return List<File> 
+     */
     private List<File> filerExisting(List<File> list,List<Music> currient){
         List<File> fileList=new ArrayList();
             for (File file : list) {
@@ -48,6 +80,13 @@ public class MusicManager {
             }
         return fileList;
     }
+    /**
+     * compares and filers out same named files
+     * filters list of music using another list of music
+     * @param addList
+     * @param currientList
+     * @return 
+     */
     public List<Music> filer(List<Music> addList,List<Music> currientList){
         List<Music> list=new ArrayList();
         for (Music amusic : addList) {

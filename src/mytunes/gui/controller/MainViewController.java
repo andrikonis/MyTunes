@@ -107,7 +107,10 @@ public class MainViewController implements Initializable {
         lwPlay.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         handleListRefresh();
     }
-
+    /**
+     * handles from which table select playlist
+     * @param event 
+     */
     @FXML
     private void handlePlaying(ActionEvent event) {
         if(tbPlay.isFocused())player.play(tbPlay.getSelectionModel().getSelectedItem().getPlaylist());
@@ -116,7 +119,6 @@ public class MainViewController implements Initializable {
         buttonSet();
         handleVolume();
     }
-
     /**
      * stets button to "Play" and "Pause" according to curriently playing song
      */
@@ -134,7 +136,11 @@ public class MainViewController implements Initializable {
             else btnPlay.setGraphic(new ImageView("file:images/play.png"));
         }
     }
-
+    /**
+     * saves the state of playlists and all song list
+     * then exits the program
+     * @param event 
+     */
     @FXML
     private void handleClose(ActionEvent event) {
         try {
@@ -147,7 +153,10 @@ public class MainViewController implements Initializable {
         }
         System.exit(0);
     }
-
+    /**
+     * handles the acton of adding music to all song table
+     * @param event 
+     */
     @FXML
     public void handleAddMusic(ActionEvent event) {
         FileChooser fc = new FileChooser();
@@ -165,21 +174,33 @@ public class MainViewController implements Initializable {
         }
         tbAll.getSelectionModel().selectFirst();
     }
-    
+    /**
+     * handles the volume set according the slider value
+     */
     @FXML
     public void handleVolume(){
         player.setVolume(sldVolume.getValue());
     }
+    /**
+     * fowards to next song
+     */
     @FXML
     public void handleNext(){
         player.next();
         buttonSet();
     }
+    /**
+     * goes one song back
+     */
     @FXML
     public void handlePrevious(){
         player.previous();
         buttonSet();
     }
+    /**
+     * opens a window for editing song information
+     * @param event 
+     */
     @FXML
     public void handleEditSong(ActionEvent event){
         try {
@@ -198,6 +219,9 @@ public class MainViewController implements Initializable {
             Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * removes song from all songs table
+     */
     @FXML
     public void handleDeleteSong(){
         Alert alert=new Alert(AlertType.CONFIRMATION);
@@ -210,14 +234,20 @@ public class MainViewController implements Initializable {
     public static MainViewController getController(){
         return controller;
     }
-
+    /**
+     * adds selected songs to selected playlist
+     * @param event 
+     */
     @FXML
     private void handleAddToPlaylist(ActionEvent event) {
         model.addToPlaylist(tbAll.getSelectionModel().getSelectedItems(), tbPlay.getSelectionModel().getSelectedItem());
         handleListRefresh();
         tbPlay.refresh();
     }
-
+    /**
+     * opens a window for adding new playlist
+     * @param event 
+     */
     @FXML
     private void handelAddPlaylist(ActionEvent event) {
         try {
@@ -235,7 +265,10 @@ public class MainViewController implements Initializable {
             Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    /**
+     * opens a window for editing playlist name
+     * @param event 
+     */
     @FXML
     private void handleEditPlaylist(ActionEvent event) {
         System.out.println(tbPlay.getSelectionModel().selectedItemProperty().get());
@@ -256,7 +289,10 @@ public class MainViewController implements Initializable {
             Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    /**
+     * removes playlist from the playlist table
+     * @param event 
+     */
     @FXML
     private void handleDeletePlaylist(ActionEvent event) {
         Alert alert=new Alert(AlertType.CONFIRMATION);
@@ -267,19 +303,28 @@ public class MainViewController implements Initializable {
         tbPlay.getSelectionModel().selectFirst();
         handleListRefresh();
     }
-
+    /**
+     * moves the song up in the playlist queue
+     * @param event 
+     */
     @FXML
     private void handleUp(ActionEvent event) {
         tbPlay.getSelectionModel().getSelectedItem().moveUp(lwPlay.getSelectionModel().getSelectedIndex());
         handleListRefresh();
     }
-
+    /**
+     * moves the song down in the playlist queue
+     * @param event 
+     */
     @FXML
     private void handleDown(ActionEvent event) {
         tbPlay.getSelectionModel().getSelectedItem().moveDown(lwPlay.getSelectionModel().getSelectedIndex());
         handleListRefresh();
     }
-
+    /**
+     * removes selected items from playlist
+     * @param event 
+     */
     @FXML
     private void handleDeleteFromPlaylist(ActionEvent event) {
         Alert alert=new Alert(AlertType.CONFIRMATION);
@@ -292,19 +337,27 @@ public class MainViewController implements Initializable {
         lwPlay.refresh();
         lwPlay.getSelectionModel().selectFirst();
     }
-
+    /**
+     * refreshes the playlist list view
+     */
     @FXML
     private void handleListRefresh() {
         try{
             lwPlay.setItems(FXCollections.observableArrayList(tbPlay.getSelectionModel().getSelectedItem().getPlaylist()));
         }catch(Exception ex){}
     }
+    /**
+     * handles the shearch query passing to model
+     */
     @FXML
     private void handleSearch() {
         model.search(txtSearch.getText().trim());
         setSearchButton();
         tbAll.getSelectionModel().selectFirst();
     }
+    /**
+     * changes the shearch button image acording to search state
+     */
     @FXML
     private void setSearchButton(){
         if(txtSearch.getText().trim().length()==0&&!model.getFilterState())btnSearch.setDisable(true);
